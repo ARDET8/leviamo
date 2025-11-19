@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>LEVIAMO — CHAOS PSYCHEDELIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+body {
+    background: linear-gradient(270deg, #0f0, #00f, #f0f);
+    font-family: 'Share Tech Mono', monospace;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    animation: bgHue 15s linear infinite;
+}
+@keyframes bgHue {
+    0% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(90deg); }
+    100% { filter: hue-rotate(180deg); }
+}
+h1 {
+    margin-top: 40px;
+    font-size: 50px;
+    color: lime;
+    text-shadow: 0px 0px 15px red;
+}
+#startBtn {
+    margin: 20px;
+    padding: 20px 50px;
+    font-size: 25px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background: cyan;
+    color: black;
+    box-shadow: 0 0 10px white;
+}
+#levaBtn, #runBtn {
+    margin: 20px;
+    padding: 20px 50px;
+    font-size: 25px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    transition: 0.2s;
+}
+#levaBtn {
+    background: magenta;
+    color: yellow;
+    box-shadow: 0 0 15px white;
+}
+#levaBtn:hover {
+    transform: scale(1.2) rotate(5deg);
+    background: yellow;
+    color: magenta;
+}
+#runBtn {
+    background: red;
+    color: white;
+    box-shadow: 0 0 10px lime;
+    animation: btnHue 3s infinite alternate;
+}
+@keyframes btnHue {
+    0% { background-color: red; color: white; }
+    50% { background-color: orange; color: black; }
+    100% { background-color: magenta; color: yellow; }
+}
+.popup {
+    position: absolute;
+    background: #111;
+    color: #0f0;
+    padding: 10px 20px;
+    border: 2px solid lime;
+    border-radius: 10px;
+    animation: fadeout 2s forwards;
+}
+@keyframes fadeout {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+</style>
+</head>
+<body>
+<h1>🚨 LEVIAMO: CHAOS PSYCHEDELIC 🚨</h1>
+
+<!-- BOTTONE START PER SCONGELARE AUDIO -->
+<button id="startBtn">Clicca qui per attivare i suoni 🎵</button>
+
+<button id="levaBtn">LEVA ORA (se hai il coraggio)</button>
+<button id="runBtn">ACCHIAPPAMI 😈</button>
+
+<script>
+const soundsUrls = [
+    "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg",
+    "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg",
+    "https://actions.google.com/sounds/v1/human_voices/fart_long.ogg",
+    "https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg",
+    "https://actions.google.com/sounds/v1/cartoon/pop.ogg"
+];
+
+// Precarica audio
+const sounds = soundsUrls.map(url => {
+    const audio = new Audio(url);
+    audio.preload = "auto";
+    return audio;
+});
+
+let audioEnabled = false;
+
+function playRandomSound() {
+    if(!audioEnabled) return;
+    const s = sounds[Math.floor(Math.random() * sounds.length)];
+    s.currentTime = 0;
+    s.play();
+}
+
+function spawnPopup() {
+    const p = document.createElement("div");
+    p.className = "popup";
+    p.innerText = "LEVATO ✔️";
+    const maxX = window.innerWidth - 100;
+    const maxY = window.innerHeight - 50;
+    p.style.left = Math.random() * maxX + "px";
+    p.style.top = Math.random() * maxY + "px";
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 2000);
+}
+
+// BOTTONE START
+document.getElementById("startBtn").addEventListener("click", () => {
+    audioEnabled = true; // abilita audio su mobile e desktop
+    document.getElementById("startBtn").style.display = "none"; // nascondi il bottone
+    alert("Audio attivato! Ora tutti i suoni funzioneranno.");
+});
+
+// LEVA ORA
+document.getElementById("levaBtn").onclick = () => {
+    for (let i = 0; i < 8; i++) spawnPopup();
+    playRandomSound();
+};
+
+// ACCHIAPPAMI: movimento dinamico + compatibilità touch
+const runBtn = document.getElementById("runBtn");
+
+function moveButtonRandomly() {
+    const maxX = window.innerWidth - runBtn.offsetWidth;
+    const maxY = window.innerHeight - runBtn.offsetHeight;
+    runBtn.style.position = "absolute";
+    runBtn.style.left = Math.random() * maxX + "px";
+    runBtn.style.top = Math.random() * maxY + "px";
+    playRandomSound();
+}
+
+// mouse
+runBtn.addEventListener("mouseover", moveButtonRandomly);
+
+// touch su mobile
+runBtn.addEventListener("touchstart", moveButtonRandomly);
+runBtn.addEventListener("touchmove", moveButtonRandomly);
+
+// movimento casuale automatico
+setInterval(() => {
+    if (Math.random() < 0.05) moveButtonRandomly();
+}, 400);
+</script>
+</body>
+</html>
